@@ -1,4 +1,9 @@
+try {
 node('master') {
+ withEnv([
+                "PATH+MAVEN=${tool 'Maven 3.3.9'}/bin",
+                "JAVA_HOME=${tool 'JDK 8u144'}"
+        ]) {
   stage('Checkout') {
    git url: 'https://github.com/piomin/sample-spring-cloud-comm.git', credentialsId: 'github-piomin',   branch: 'feign_with_discovery'
   }
@@ -23,5 +28,11 @@ node('master') {
   stage ('Run') {
    docker.image("piomin/account-service:${env.version}").run('-p 8091:8091 -m 256M -e EUREKA_DEFAULT_ZONE=http://discovery:8761/eureka -d --name account --network sample-spring-cloud-network')
   }
-
+}
+}
+}
+catch (err) {
+      def mailTo = "kshitiz.krishna@CVSHealth.com,Arumugham.Rengaraj@CVSHealth.com,Daniel.Hludzinski@CVSHealth.com,Christopher.Thompson@CVSHealth.com,Sameer.Khan@CVSHealth.com"
+      emailext attachLog: true, body: '$DEFAULT_CONTENT\n\n' + err.getMessage(), cc: '', from: 'no-reply@cicd-jenkinsmaster-01', replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT' + ' is ambiguous or failed', to: "${mailTo}"
+    throw err
 }
