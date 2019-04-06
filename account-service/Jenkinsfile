@@ -1,5 +1,4 @@
 node('master') {
- withMaven(maven:'M3') {
   stage('Checkout') {
    git url: 'https://github.com/piomin/sample-spring-cloud-comm.git', credentialsId: 'github-piomin',   branch: 'feign_with_discovery'
   }
@@ -25,5 +24,4 @@ node('master') {
    docker.image("piomin/account-service:${env.version}").run('-p 8091:8091 -m 256M -e EUREKA_DEFAULT_ZONE=http://discovery:8761/eureka -d --name account --network sample-spring-cloud-network')
   }
 
- }
 }
