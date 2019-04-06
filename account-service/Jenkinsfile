@@ -1,4 +1,4 @@
-try {
+
 node('master') {
  withEnv([
                 "PATH+MAVEN=${tool 'Maven 3'}/bin",
@@ -29,10 +29,4 @@ node('master') {
    docker.image("piomin/account-service:${env.version}").run('-p 8091:8091 -m 256M -e EUREKA_DEFAULT_ZONE=http://discovery:8761/eureka -d --name account --network sample-spring-cloud-network')
   }
 }
-}
-}
-catch (err) {
-      def mailTo = "kshitiz.krishna@cognizant.com"
-      emailext attachLog: true, body: '$DEFAULT_CONTENT\n\n' + err.getMessage(), cc: '', from: 'no-reply@cicd-jenkinsmaster-01', replyTo: '$DEFAULT_REPLYTO', subject: '$DEFAULT_SUBJECT' + ' is ambiguous or failed', to: "${mailTo}"
-    throw err
 }
