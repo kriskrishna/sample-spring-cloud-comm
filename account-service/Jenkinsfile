@@ -4,6 +4,7 @@ pipeline {
 		// TODO: how to make this parametrizable?
 		jdk "jdk8"
 	}
+	stages{
  withMaven(maven:'M3') {
   stage('Checkout') {
    git url: 'https://github.com/kriskrishna/sample-spring-cloud-comm.git',  branch: 'feign_with_discovery'
@@ -30,5 +31,6 @@ pipeline {
    docker.image("kriskrishna/account-service:${env.version}").run('-p 8091:8091 -m 256M -e EUREKA_DEFAULT_ZONE=http://discovery:8761/eureka -d --name account --network sample-spring-cloud-network')
   }
 
+ }
  }
 }
